@@ -1,4 +1,5 @@
 /*
+  mods by SJR, last update 2/19/2022
  * Copyright (c) 2015 by Thomas Trojer <thomas@trojer.net>
  * Decawave DW1000 library for arduino.
  *

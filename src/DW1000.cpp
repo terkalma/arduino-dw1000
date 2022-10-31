@@ -1,4 +1,7 @@
 /*
+ 
+ last update 2/20/2022 sjr
+ 
  * Copyright (c) 2015 by Thomas Trojer <thomas@trojer.net>
  * Decawave DW1000 library for arduino.
  *
@@ -169,9 +172,9 @@ void DW1000Class::begin(uint8_t irq, uint8_t rst) {
     	pinMode(irq, INPUT);
 	// start SPI
 	SPI.begin();
-#ifndef ESP8266
-	// SPI.usingInterrupt(digitalPinToInterrupt(irq)); // not every board support this, e.g. ESP8266
-#endif
+//#ifndef ESP8266
+//	SPI.usingInterrupt(digitalPinToInterrupt(irq)); // not every board support this, e.g. ESP8266
+//#endif
 	// pin and basic member setup
 	_rst        = rst;
 	_irq        = irq;
@@ -1011,6 +1014,12 @@ void DW1000Class::interruptOnAutomaticAcknowledgeTrigger(boolean val) {
 void DW1000Class::setAntennaDelay(const uint16_t value) {
 	_antennaDelay.setTimestamp(value);
 	_antennaCalibrated = true;
+	// added by SJR -- commit to device register (see function commitConfiguration())
+	byte antennaDelayBytes[DW1000Time::LENGTH_TIMESTAMP];
+	_antennaDelay.getTimestamp(antennaDelayBytes);
+	writeBytes(TX_ANTD, NO_SUB, antennaDelayBytes, LEN_TX_ANTD);
+	writeBytes(LDE_IF, LDE_RXANTD_SUB, antennaDelayBytes, LEN_LDE_RXANTD);
+	// added by SJR
 }
 
 uint16_t DW1000Class::getAntennaDelay() {
